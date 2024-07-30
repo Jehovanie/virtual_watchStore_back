@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+    id              Int                 @id @default(autoincrement())
+    name            String
+    email           String              @unique
+    password        String
+    watches         Watch[]             @relation("UserWatches")
+    watchReview     WatchReview[]       @relation("watchReview")
+}
+
+model Watch {
+    id                  Int     @id     @default(autoincrement())
+    brand               String
+    model               String
+    type                String
+    price               Decimal
+    bestSeler           Decimal
+    material            String
+    water_resistance    Boolean
+    features            String
+    release_date        DateTime
+    images              String[]
+    description         String
+    stock_quantity      Int
+    owner               User                @relation(fields: [ownerID], references: [id],  name: "UserWatches")
+    ownerID             Int
+    watchOrder          WatchOrder[]        @relation("watchOrder")
+    watchReview         WatchReview[]       @relation("watch")
+}
+
+
+model WatchOrder{
+    id                  Int     @id  @default(autoincrement())
+    watch               Watch[]   @relation(fields: [watchID], references: [id],  name: "watchOrder")
+    watchID             Int
+    quantity            Int
+    total_price         Decimal
+    order_date          DateTime
+    status              String
+    shipping_address    String
+    payment_method      String
+    shipping_cost       Decimal
+    tracking_number     String
+    commandeDelivery    CommandDelivery? @relation(fields: [commandeDeliveryId], references: [id], name:"commandDelivery")
+    commandeDeliveryId  Int?    @unique
+}
+
+
+model CommandDelivery{
+    id                  Int             @id         @default(autoincrement())
+    order               WatchOrder?     @relation("commandDelivery")
+    status              String          
+    delivery_date       DateTime
+    tracking_number     Int
+    shipping_address    String
+}
+
+model WatchReview{
+    id              Int         @id     @default(autoincrement())
+    author          User        @relation(fields: [authorID] references: [id],  name: "watchReview")
+    authorID        Int
+    watch           Watch       @relation(fields: [watchID], references: [id],  name: "watch")
+    watchID         Int         
+    rating          Decimal
+    comment         String
+    review_date     DateTime
+}

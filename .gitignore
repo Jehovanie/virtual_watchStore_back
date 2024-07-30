@@ -1,3 +1,4 @@
 /node_modules
 /dist
-/data_base.pdf
+data_base.pdf
+.env
