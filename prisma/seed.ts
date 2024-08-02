@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ async function main() {
 		users.push(
 			prisma.user.create({
 				data: {
-					name: faker.name.findName(),
+					name: faker.person.fullName(),
 					email: faker.internet.email(),
 					password: faker.internet.password(),
 				},
@@ -28,21 +28,21 @@ async function main() {
 		watches.push(
 			prisma.watch.create({
 				data: {
-					brand: faker.company.companyName(),
-					model: faker.random.word(),
-					type: faker.random.word(),
-					price: faker.datatype.float({ min: 100, max: 10000 }),
-					bestSeler: faker.datatype.float({ min: 0, max: 1000 }),
-					material: faker.random.word(),
+					brand: faker.company.name(),
+					model: faker.lorem.words(),
+					type: faker.lorem.words(),
+					price: faker.number.float({ min: 10, max: 100, multipleOf: 0.02 }),
+					bestSeler: faker.number.float({ min: 10, max: 100, multipleOf: 0.02 }),
+					material: faker.lorem.words(),
 					water_resistance: faker.datatype.boolean(),
 					features: faker.lorem.sentence(),
 					release_date: faker.date.past(),
-					images: [faker.image.imageUrl(), faker.image.imageUrl()],
+					images: [faker.image.avatarGitHub(), faker.image.avatarGitHub()],
 					description: faker.lorem.paragraph(),
-					stock_quantity: faker.datatype.number({ min: 0, max: 100 }),
+					stock_quantity: faker.number.int({ max: 20 }),
 					owner: {
 						connect: {
-							id: allUsers[faker.datatype.number({ min: 0, max: allUsers.length - 1 })].id,
+							id: allUsers[faker.number.int({ min: 0, max: allUsers.length - 1 })].id,
 						},
 					},
 				},
@@ -62,24 +62,24 @@ async function main() {
 				data: {
 					userOrder: {
 						connect: {
-							id: allUsers[faker.datatype.number({ min: 0, max: allUsers.length - 1 })].id,
+							id: allUsers[faker.number.int({ min: 0, max: allUsers.length - 1 })].id,
 						},
 					},
 					watch: {
 						connect: allWatches
-							.slice(0, faker.datatype.number({ min: 1, max: allWatches.length }))
+							.slice(0, faker.number.int({ min: 1, max: allWatches.length }))
 							.map((watch) => ({
 								id: watch.id,
 							})),
 					},
-					quantity: faker.datatype.number({ min: 1, max: 5 }),
-					total_price: faker.datatype.float({ min: 100, max: 5000 }),
+					quantity: faker.number.int({ min: 1, max: 5 }),
+					total_price: faker.number.float({ min: 100, max: 5000, multipleOf: 0.02 }),
 					order_date: faker.date.past(),
-					status: faker.random.word(),
-					shipping_address: faker.address.streetAddress(),
+					status: faker.lorem.words(),
+					shipping_address: faker.location.streetAddress(),
 					payment_method: faker.finance.transactionType(),
-					shipping_cost: faker.datatype.float({ min: 5, max: 50 }),
-					tracking_number: faker.datatype.uuid(),
+					shipping_cost: faker.number.float({ min: 5, max: 50, multipleOf: 0.02 }),
+					tracking_number: faker.string.uuid(),
 				},
 			})
 		);
@@ -100,10 +100,10 @@ async function main() {
 							id: allWatchOrders[i].id,
 						},
 					},
-					status: faker.random.word(),
+					status: faker.lorem.words(),
 					delivery_date: faker.date.future(),
-					tracking_number: faker.datatype.number({ min: 100000, max: 999999 }),
-					shipping_address: faker.address.streetAddress(),
+					tracking_number: faker.number.int({ min: 100, max: 999 }),
+					shipping_address: faker.location.streetAddress(),
 				},
 			})
 		);
@@ -118,15 +118,15 @@ async function main() {
 				data: {
 					watch: {
 						connect: {
-							id: allWatches[faker.datatype.number({ min: 0, max: allWatches.length - 1 })].id,
+							id: allWatches[faker.number.int({ min: 0, max: allWatches.length - 1 })].id,
 						},
 					},
-					rating: faker.datatype.float({ min: 1, max: 5 }),
+					rating: faker.number.float({ min: 1, max: 5 }),
 					comment: faker.lorem.sentence(),
 					review_date: faker.date.past(),
 					author: {
 						connect: {
-							id: allUsers[faker.datatype.number({ min: 0, max: allUsers.length - 1 })].id,
+							id: allUsers[faker.number.int({ min: 0, max: allUsers.length - 1 })].id,
 						},
 					},
 				},
