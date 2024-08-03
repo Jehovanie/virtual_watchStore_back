@@ -1,5 +1,5 @@
 import * as express from "express";
-import { Server } from "./Server";
+import { Server } from "./server";
 import cors from "cors";
 import { environment } from "./../environment/environment";
 import routers from "./router/index";
