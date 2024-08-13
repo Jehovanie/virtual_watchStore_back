@@ -28,17 +28,17 @@ async function main() {
 		watches.push(
 			prisma.watch.create({
 				data: {
-					brand: faker.company.name(),
-					model: faker.lorem.words(),
-					type: faker.lorem.words(),
+					brand: faker.commerce.productName(),
+					model: faker.commerce.productAdjective(),
+					type: faker.commerce.isbn(),
 					price: faker.number.float({ min: 10, max: 100, multipleOf: 0.02 }),
 					bestSeler: faker.number.float({ min: 10, max: 100, multipleOf: 0.02 }),
-					material: faker.lorem.words(),
+					material: faker.commerce.productMaterial(),
 					water_resistance: faker.datatype.boolean(),
 					features: faker.lorem.sentence(),
 					release_date: faker.date.past(),
 					images: [faker.image.avatarGitHub(), faker.image.avatarGitHub()],
-					description: faker.lorem.paragraph(),
+					description: faker.lorem.paragraphs(5),
 					stock_quantity: faker.number.int({ max: 20 }),
 					owner: {
 						connect: {
@@ -144,3 +144,5 @@ main()
 	.finally(async () => {
 		await prisma.$disconnect();
 	});
+
+/// https://fakerjs.dev/api/

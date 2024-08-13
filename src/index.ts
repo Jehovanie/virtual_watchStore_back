@@ -1,4 +1,3 @@
-
 import { AppModule } from "./App";
 
 (function (appModule: any) {
