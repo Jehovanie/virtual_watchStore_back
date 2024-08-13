@@ -3,6 +3,7 @@ import { Server } from "./Server";
 import cors from "cors";
 import { environment } from "./../environment/environment";
 import routers from "./router/index";
+import CustomError from "./entity/CustomeError";
 
 const middlewares: any[] = [
 	express.urlencoded({ extended: false }),
@@ -20,6 +21,8 @@ export class AppModule {
 	constructor(private server: Server) {
 		this.server = new Server({ port: environment.PORT, middlewares });
 		this.route();
+		
+		this.standardizedErrorResponse();
 	}
 
 	route() {
@@ -33,5 +36,11 @@ export class AppModule {
 
 	use(...args: any): void {
 		this.server.use(...args);
+	}
+
+	standardizedErrorResponse() {
+		this.use((err: CustomError, req: any, res: any) => {
+			res.status(err.code).json({ message: err.message, data: {} });
+		});
 	}
 }
